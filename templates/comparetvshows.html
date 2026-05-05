@@ -10,9 +10,10 @@
 <p class="p-intro">Search and compare up to five tv shows!</p>
     
 <div class="search-wrapper">
-    <p class="search-text">Search Bar</p>
+    <p class="search-text">Search</p>
+    <i class="search-icon fas fa-search"></i>
     <div class="search-container">
-        <input type="text" class="search-class" id="searchShowInput" placeholder="Enter Show title">
+        <input type="text" class="search-class" id="searchShowInput" placeholder="Enter Show Title">
         <div id="searchResults"></div>
     </div>
 </div>
@@ -34,12 +35,12 @@
 <script src="./../static/main.js"></script>
 <script>
     let currentResults = [];  // Store all search results
-    let displayedResults = 10;  // Number of results to display initially
+    let displayedResults = 5;  // Number of results to display initially
     const showTitles = [];
     const showRatings = [];
     const showObjects = [];
     let counter = 0;
-    const maxLenght = 2;
+    const maxLenght = displayedResults;
     const alertOkBox = document.querySelector(".alert-message-box");
     const canvasContainer = document.querySelector(".canvasContainer");
     const alertOk = document.getElementById("alertOk");

@@ -2,6 +2,8 @@
 
 A personally designed Flask web app that allows users to search, compare, and save movies and shows using real-time data from The Movie Database. 
 
+Check it on https://movieshowsdb.onrender.com.
+
 
 # Features
 - search bar to find movies/shows with detailed infos
