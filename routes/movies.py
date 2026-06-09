@@ -32,9 +32,9 @@ def movie(id):
         print("request method is get")
 
         if user_id:
-
-            button_favorites = "remove from favorites" if is_favorite(username, id, "movie") else "add to favorites"
-            button_watchlist = "remove from watchlist" if is_in_watchlist(username, id, "movie") else "add to watchlist"
+            status = get_item_status(username, id, "movie")
+            button_favorites = "remove from favorites" if status["is_favorite"] else "add to favorites"
+            button_watchlist = "remove from watchlist" if status["is_in_watchlist"] else "add to watchlist"
 
             return render_template ("movie.html", imgMovie_datas = imgMovie_datas,  movie_datas=movie_datas, button_favorites=button_favorites, button_watchlist=button_watchlist)
         else:

@@ -44,11 +44,9 @@ def tvshow_id(id):
     number_of_seasons = show_datas["number_of_seasons"]
     print(f"{show_datas["name"]} has {number_of_seasons} seasons")
 
-    favorite = is_favorite(username, id, "tv-show")
-    watchlist = is_in_watchlist(username, id, "tv-show")
-
-    button_favorites = "remove from favorites" if favorite else "add to favorites"
-    button_watchlist = "remove from watchlist" if watchlist else "add to watchlist"
+    status = get_item_status(username, id, "tv-show")
+    button_favorites = "remove from favorites" if status["is_favorite"] else "add to favorites"
+    button_watchlist = "remove from watchlist" if status["is_in_watchlist"] else "add to watchlist"
 
     
     # FUNCTION TO GET ALL EPISODES DATA
@@ -57,6 +55,15 @@ def tvshow_id(id):
         favorite_buttons = []
         season_ratings = []
         counter = 0
+
+        # fetch all favorite episode IDs of the user and show in one query
+        favorite_episode_ids = set()
+        if user_id:
+            fav_rows = db.execute(
+                "SELECT episode_id FROM usershows WHERE username = %s AND show_id = %s",
+                username, id
+            )
+            favorite_episode_ids = {row["episode_id"] for row in fav_rows}
 
 
         for season in range(1, number_of_seasons + 1):
@@ -71,10 +78,8 @@ def tvshow_id(id):
                 counter += 1
                 ratings.append(episode["vote_average"])
 
-                episode_exists = db.execute("SELECT 1 FROM usershows WHERE episode_id = %s AND username = %s",
-                                            episode["id"], username)
-
-                favorite_buttons.append("Unfavorite" if episode_exists else "Add Favorite")
+                is_fav = episode["id"] in favorite_episode_ids
+                favorite_buttons.append("Unfavorite" if is_fav else "Add Favorite")
 
             season_ratings.append(ratings)
 
