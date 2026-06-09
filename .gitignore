@@ -5,3 +5,7 @@ __pycache__/
 venv
 cred.txt
 .env
+Lib/
+Scripts/
+pyvenv.cfg
+include/

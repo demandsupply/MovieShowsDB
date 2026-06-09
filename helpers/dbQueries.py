@@ -10,6 +10,21 @@ def get_username(user_id):
 
 
 # Favorites functions
+def get_item_status(user, item_id, item_type):
+    rows = db.execute(
+        "SELECT category FROM favoriteswatchlist " \
+        "WHERE username = ? AND " \
+        "item_id = ? AND " \
+        "type = ?",
+        user, item_id, item_type
+    )
+    categories = [row["category"] for row in rows]
+    return {
+        "is_favorite": "favorite" in categories,
+        "is_in_watchlist": "watchlist" in categories
+    }
+
+
 def is_favorite(user, item_id, type):
     rows = db.execute(
         "SELECT * FROM favoriteswatchlist " \
