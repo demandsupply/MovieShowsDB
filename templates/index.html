@@ -60,13 +60,11 @@
     <div class="carousel-view">
         <div class="btn-control prev-btn" id="showBtnPrev" ><i class="fa-solid fa-angle-left"></i></div>
         <div class="carousel-item-list" id="showCarouselList">
-            {% for page in popular_show_list %}
-                {% for show in page["results"] %}
+            {% for show in popular_show_list %}
                     <a class="carousel-item" href="tvshow/{{ show["id"] }} ">
                         <img class="poster-img" src="https://image.tmdb.org/t/p/w440_and_h660_face/{{ show["poster_path"] }}" alt=""> 
                         <p class="carousel-item-p">{{ show["name"] }} <br> (<i class="fa-solid fa-star"></i> <span class="vote-round">{{ show["vote_average"] }}</span>)</p>
                     </a>
-                {% endfor %}
             {% endfor %}
         </div>
         <div class="btn-control next-btn" id="showBtnNext"><i class="fa-solid fa-angle-right"></i></div>
