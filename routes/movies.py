@@ -1,3 +1,4 @@
+import asyncio
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from helpers.postgreeDbQueries import *
 from helpers.utils import tmdb_get, format_runtime
@@ -15,17 +16,23 @@ db = SQL(os.getenv("DATABASE_URL"))
 
 
 @movies_bp.route("/movie/<id>", methods = ["GET", "POST"])
-def movie(id):
+async def movie(id):
     user_id = session.get("user_id")
     username = get_username(session["user_id"]) if user_id else "guest"
 
-    movie_datas = tmdb_get(f"movie/{id}")
+    # Parallelize movie data and images fetch
+    movie_task = asyncio.to_thread(tmdb_get, f"movie/{id}")
+    images_task = asyncio.to_thread(tmdb_get, f"movie/{id}/images?language=en")
+
+    results = await asyncio.gather(movie_task, images_task)
+    movie_datas = results[0]
+    imgMovie_datas = results[1]
+
     if not movie_datas:
         return "Movie not found", 404
     
     print(f"movie id is {id}.\nIts data are {movie_datas}")
-
-    imgMovie_datas = tmdb_get(f"movie/{id}/images?language=en")
+    
     movie_datas["runtime_formatted"] = format_runtime(movie_datas.get("runtime"))
 
     if request.method == ("GET"):
