@@ -57,7 +57,7 @@
                 {% for item in imgMovie_datas["posters"] %}
                     {% if loop.index0 > 0  and loop.index < 10 %}
                     <div class="dedicated-img-container carousel-img-item">
-                        <img class="dedicated-poster" src="https://image.tmdb.org/t/p/w500/{{ item["file_path"] }}" alt="">
+                        <img loading="lazy" class="dedicated-poster" src="https://image.tmdb.org/t/p/w500/{{ item["file_path"] }}" alt="">
                     </div>
                     {% endif %}
                 {% endfor %}

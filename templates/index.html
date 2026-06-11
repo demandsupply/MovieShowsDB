@@ -45,7 +45,7 @@
         <div class="carousel-item-list" id="movieCarouselList">
             {% for movie in popular_movie_list %}
                 <a class="carousel-item" href="movie/{{ movie["id"] }} ">
-                    <img class="poster-img" src="https://image.tmdb.org/t/p/w440_and_h660_face/{{ movie["poster_path"] }}" alt=""> 
+                    <img loading="lazy" class="poster-img" src="https://image.tmdb.org/t/p/w440_and_h660_face/{{ movie["poster_path"] }}" alt=""> 
                     <p class="carousel-item-p">{{ movie["title"] }} <br> (<i class="fa-solid fa-star"></i> <span class="vote-round">{{ movie["vote_average"] }}</span>)</p>
                 </a>
             {% endfor %}
@@ -60,13 +60,11 @@
     <div class="carousel-view">
         <div class="btn-control prev-btn" id="showBtnPrev" ><i class="fa-solid fa-angle-left"></i></div>
         <div class="carousel-item-list" id="showCarouselList">
-            {% for page in popular_show_list %}
-                {% for show in page["results"] %}
+            {% for show in popular_show_list %}
                     <a class="carousel-item" href="tvshow/{{ show["id"] }} ">
-                        <img class="poster-img" src="https://image.tmdb.org/t/p/w440_and_h660_face/{{ show["poster_path"] }}" alt=""> 
+                        <img loading="lazy" class="poster-img" src="https://image.tmdb.org/t/p/w440_and_h660_face/{{ show["poster_path"] }}" alt=""> 
                         <p class="carousel-item-p">{{ show["name"] }} <br> (<i class="fa-solid fa-star"></i> <span class="vote-round">{{ show["vote_average"] }}</span>)</p>
                     </a>
-                {% endfor %}
             {% endfor %}
         </div>
         <div class="btn-control next-btn" id="showBtnNext"><i class="fa-solid fa-angle-right"></i></div>
@@ -81,7 +79,7 @@
             <p class="random-p compare-p">A Random <br> Movie</p>
         </div>
         <a class="random-box-content rbc1" href="movie/{{ random_movie["id"] }}"">
-            <img class="random-poster-img" src="https://image.tmdb.org/t/p/w440_and_h660_face/{{ random_movie["poster_path"] }}" alt=""> 
+            <img loading="lazy" class="random-poster-img" src="https://image.tmdb.org/t/p/w440_and_h660_face/{{ random_movie["poster_path"] }}" alt=""> 
             <p class="carousel-item-p">{{ random_movie["title"] }} (<i class="fa-solid fa-star"></i> <span class="vote-round">{{ random_movie["vote_average"] }}</span>)</p>
         </a>
     </div>
@@ -91,7 +89,7 @@
             <p class="random-p compare-p">A Random <br> Show</p>
         </div>
         <a class="random-box-content rbc2" href="tvshow/{{ random_show["id"] }}"">
-            <img class="random-poster-img" src="https://image.tmdb.org/t/p/w440_and_h660_face/{{ random_show["poster_path"] }}" alt=""> 
+            <img loading="lazy" class="random-poster-img" src="https://image.tmdb.org/t/p/w440_and_h660_face/{{ random_show["poster_path"] }}" alt=""> 
             <p class="carousel-item-p">{{ random_show["name"] }} (<i class="fa-solid fa-star"></i> <span class="vote-round">{{ random_show["vote_average"] }}</span>)</p>
         </a>
     </div>

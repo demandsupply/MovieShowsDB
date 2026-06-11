@@ -917,6 +917,8 @@ td {
 /* TOP RATED */
 .top-item-container {
     margin: 16px 0;
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 180px;
 }
 .top-item-container > div {
     min-height: 180px;

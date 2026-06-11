@@ -1,3 +1,4 @@
+import asyncio
 import os
 from flask import Flask, redirect, render_template, request, jsonify, session, flash, url_for, abort
 from cs50 import SQL
@@ -126,24 +127,12 @@ def register():
 #############################   INDEX    ############################
 
 @app.route("/", methods=["GET", "POST"])
-def index():
+async def index():
     if request.method == "GET":
-        popular_movie_list = []
-        popular_show_list = []
-
         # fetch data using function from helpers -> more efficient
-        popular_movies = tmdb_get(f"movie/popular")
-
-        popular_movie_list = popular_movies["results"]
-        print("popular_movie_list: ", popular_movie_list)
-
-        # kept old code for comparison
-        show_url = f"https://api.themoviedb.org/3/tv/popular"
-
-        response_show = requests.get(show_url, headers=headers)
-        show_data = json.loads(response_show.text)
-        popular_show_list.append(show_data)
-        # print("popular_show_list", popular_show_list)
+        # use asyncio to parallelize popular movies and shows fetch
+        movies_task = asyncio.to_thread(tmdb_get, "movie/popular")
+        shows_task = asyncio.to_thread(tmdb_get, "tv/popular")
 
         # get random movies using "discover/movie?" endpoint -> lighter and more efficient way
         def get_random_movie():
@@ -171,8 +160,18 @@ def index():
                 else:
                     print(f"Adult content, load another show")
             else:
-                print(f"Show does not exist, load another ID")        
-            
+                print(f"Show does not exist, load another ID")   
+
+        results = await asyncio.gather(movies_task, shows_task)
+        
+        popular_movies = results[0]
+        popular_shows = results[1]
+
+        popular_movie_list = popular_movies["results"] if popular_movies else []
+        popular_show_list = popular_shows["results"] if popular_shows else []
+
+        # print(f"popular_show_list: {popular_show_list}")   
+        
         return render_template("index.html", popular_movie_list=popular_movie_list, popular_show_list=popular_show_list, random_movie=get_random_movie(), random_show=random_show_data)
     else:
         q = request.form.get("q")
