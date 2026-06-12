@@ -780,7 +780,7 @@ td {
 
 .dedicated-form {
     display: flex;
-    flex-direction: column;
+    /* flex-direction: column; */
     gap: 16px;
     margin-top: 48px;
 }
@@ -1165,11 +1165,59 @@ footer > div > p {
         flex-direction: column;
     }
 
+    .dedicated-text-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .dedicated-text-container p {
+        margin: 2px 0;
+    }
+
     .btn {
         font-size: 1.6rem;
     }
     .dedicated-form {
+        order: -1;
         flex-direction: row;
+        margin-top: 0;
+        margin-bottom: 24px;
+    }
+}
+
+.rotate-hint {
+    position: fixed;
+    right: 15px;
+    bottom: 15px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #d4cbc9;
+    color: #fff;
+    padding: 16px;
+    border-radius: 9999px;
+    margin: 20px auto;
+    width: 64px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.rotate-hint i {
+    font-size: 3rem;
+    animation: rotate 2s infinite linear;
+}
+
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(90deg); }
+    50% { transform: rotate(90deg); }
+    75% { transform: rotate(0deg); }
+    100% { transform: rotate(0deg); }
+}
+
+@media screen and (max-width: 640px) and (orientation: portrait) {
+    .rotate-hint {
+        display: flex;
     }
 }
 
