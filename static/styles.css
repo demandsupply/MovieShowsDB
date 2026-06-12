@@ -876,6 +876,10 @@ td {
     word-wrap: break-word;
     overflow-wrap: break-word;
   }
+.tooltip-title a {
+    /* text-decoration: none; */
+    color: black;
+}
 .chartContentDiv {
     width: 100%;
     background-color: #f1a782;
