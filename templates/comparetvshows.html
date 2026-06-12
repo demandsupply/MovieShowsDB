@@ -1,343 +1,341 @@
-{% extends "layout.html" %}
-
-{% block title %}
-    AJAX compare shows
-{% endblock %}
-
+{% extends "layout.html" %} {% block title %} AJAX compare shows {% endblock %}
 {% block main %}
 
-<h1>Tv Show Search</h1>
+<h1>Show Ratings</h1>
 <p class="p-intro">Search and compare up to five tv shows!</p>
-    
+
 <div class="search-wrapper">
-    <p class="search-text">Search</p>
-    <i class="search-icon fas fa-search"></i>
-    <div class="search-container">
-        <input type="text" class="search-class" id="searchShowInput" placeholder="Enter Show Title">
-        <div id="searchResults"></div>
-    </div>
+  <p class="search-text">Search</p>
+  <i class="search-icon fas fa-search"></i>
+  <div class="search-container">
+    <input
+      type="text"
+      class="search-class"
+      id="searchShowInput"
+      placeholder="Enter Show Title"
+    />
+    <div id="searchResults"></div>
+  </div>
 </div>
 <div class="alert-message-box">
-    <div class="alert-message">
-        You can't compare more than 5 shows.
-        <div class="btn" id="alertOk">Ok</div>
-    </div>
+  <div class="alert-message">
+    You can't compare more than 5 shows.
+    <div class="btn" id="alertOk">Ok</div>
+  </div>
 </div>
 <div id="overlayPage"></div>
 
 <div class="canvasContainer">
-    <canvas id="myChart"></canvas>
-    <div id="chartShowsInfo"></div>
-
+  <canvas id="myChart"></canvas>
+  <div id="chartShowsInfo"></div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="./../static/main.js"></script>
 <script>
-    let currentResults = [];  // Store all search results
-    let displayedResults = 5;  // Number of results to display initially
-    const showTitles = [];
-    const showRatings = [];
-    const showObjects = [];
-    let counter = 0;
-    const maxLenght = displayedResults;
-    const alertOkBox = document.querySelector(".alert-message-box");
-    const canvasContainer = document.querySelector(".canvasContainer");
-    const alertOk = document.getElementById("alertOk");
-    const overlay = document.getElementById("overlayPage");
+  let currentResults = []; // Store all search results
+  let displayedResults = 5; // Number of results to display initially
+  const showTitles = [];
+  const showRatings = [];
+  const showObjects = [];
+  let counter = 0;
+  const maxLenght = displayedResults;
+  const alertOkBox = document.querySelector(".alert-message-box");
+  const canvasContainer = document.querySelector(".canvasContainer");
+  const alertOk = document.getElementById("alertOk");
+  const overlay = document.getElementById("overlayPage");
 
+  let objectCounter = 0;
+  let listOfSeries = [];
+  let listOfSeriesData = [];
 
-    let objectCounter = 0;
-    let listOfSeries = [];
-    let listOfSeriesData = [];
+  function performShowSearch() {
+    let query = document.getElementById("searchShowInput").value;
 
+    $.ajax({
+      type: "POST",
+      url: "/comparetvshows",
+      data: { q: query },
+      success: function (data) {
+        currentResults = data.results; // Assuming your API response has a 'results' property
 
-    function performShowSearch() {
-        let query = document.getElementById('searchShowInput').value;
-    
-        $.ajax({
-            type: 'POST',
-            url: '/comparetvshows',
-            data: { q: query },
-            success: function(data) {
-                currentResults = data.results;  // Assuming your API response has a 'results' property
-    
-                // Display the first 'displayedResults' results
-                displayShowResults(currentResults.slice(0, displayedResults));
-            },
-            error: function(error) {
-                console.log(error);
-            }
-        });
+        // Display the first 'displayedResults' results
+        displayShowResults(currentResults.slice(0, displayedResults));
+      },
+      error: function (error) {
+        console.log(error);
+      },
+    });
+  }
 
-}
-    
-    
-    
-    
-    
-    
-    function displayShowResults(results) {
-        let resultsContainer = document.getElementById('searchResults');
-        resultsContainer.innerHTML = '';
-    
-        if (results.length === 0) {
-            resultsContainer.innerHTML = 'No results found.';
+  function displayShowResults(results) {
+    let resultsContainer = document.getElementById("searchResults");
+    resultsContainer.innerHTML = "";
+
+    if (results.length === 0) {
+      resultsContainer.innerHTML = "No results found.";
+      return;
+    }
+
+    let ul = document.createElement("ul");
+    ul.classList.add("results");
+    results.forEach(function (result) {
+      let li = document.createElement("li");
+      li.addEventListener("click", function () {
+        compareItemClick(this);
+      });
+
+      let year = toYear(result.first_air_date);
+      li.textContent = result.name + " (" + year + ")"; // Shows the tv show title and its year
+      li.id = result.id;
+      li.title = result.name;
+      li.plot = result.overview;
+      li.poster = result.poster_path;
+      li.date = year;
+
+      ul.appendChild(li);
+      // li.appendChild(link);
+      console.log("ratings are" + li.id + li.textContent);
+    });
+
+    resultsContainer.appendChild(ul);
+
+    // close results div if the user clicks outside the div
+    window.addEventListener("click", function (e) {
+      if (e.target != document.querySelector(".results")) {
+        ul.remove();
+      }
+    });
+
+    function compareItemClick(dataObtained) {
+      $.ajax({
+        type: "POST",
+        url: "/showratings",
+        data: { q: dataObtained.id },
+        success: function (data) {
+          console.log("item clicked. id show is " + dataObtained.id);
+          const canvasContainer = document.querySelector(".canvasContainer");
+          const showData = {
+            id: dataObtained.id,
+            title: dataObtained.title,
+            rating: data,
+            poster: dataObtained.poster,
+            date: dataObtained.date,
+            plot: dataObtained.plot,
+            seasons: dataObtained.number_of_seasons,
+          };
+
+          function showLimitMessage() {
+            alertOkBox.style.display = "block";
+            overlay.style.display = "block";
+          }
+
+          function hideLimitMessage() {
+            alertOkBox.style.display = "none";
+            overlay.style.display = "none";
+          }
+
+          // Add movie data to listOfSeries
+          if (listOfSeries.length < maxLenght) {
+            listOfSeries.push(data);
+            console.log("list of series is " + data);
+            // canvasContainer.style.width = (counter+1)*100 + "px";
+            //counter++;
+          } else {
+            showLimitMessage();
             return;
-        }
-    
-        let ul = document.createElement('ul');
-        ul.classList.add("results");
-        results.forEach(function(result) {
-            let li = document.createElement('li');
-            li.addEventListener('click', function() {
-                compareItemClick(this);
-            })
+          }
 
-            let year = toYear(result.first_air_date);
-            li.textContent = result.name + " (" + year + ")";  // Shows the tv show title and its year
-            li.id = result.id;
-            li.title = result.name;
-            li.plot = result.overview;
-            li.poster = result.poster_path;
-            li.date = year;
-            
-            ul.appendChild(li);
-            // li.appendChild(link);
-            console.log("ratings are" + li.id + li.textContent);
-        });
-    
-        resultsContainer.appendChild(ul);
-    
-        // close results div if the user clicks outside the div
-        window.addEventListener("click", function(e) {
-            if (e.target != document.querySelector(".results")) {
-                ul.remove();
+          alertOk.addEventListener("click", hideLimitMessage);
+
+          if (window.chartInstance) {
+            window.chartInstance.destroy();
+          }
+
+          showObjects.push(showData);
+          showTitles.push(dataObtained.title);
+
+          console.log("showObjects:", showObjects);
+          console.log("showTitles:", showTitles);
+
+          showObjects.forEach((element) => console.log(element.title));
+
+          console.log("START GRAPH FUNCTION");
+          console.log(listOfSeries);
+
+          seasonLength = [];
+          xyValuesList = [];
+          titleList = [];
+          highestCounter = 0;
+          maxEpisodesCounter = 0;
+          let nOfSeasons;
+
+          for (let i = 0; i < listOfSeries.length; i++) {
+            console.log(
+              `Series: ${showTitles[i]}, number os seasons: ${listOfSeries[i].length}`,
+            );
+            episodesCounter = 0;
+            console.log("listOfSeries is", listOfSeries[i]);
+            nOfSeasons = listOfSeries[i].length;
+
+            let seasonsArray = listOfSeries[i];
+            tempList = [];
+
+            for (k = 0; k < seasonsArray.length; k++) {
+              temporary = seasonsArray[k];
+              seasonLength[i] = temporary.length;
+              objectCounter[i] = 0;
+
+              for (let j = 0; j < seasonLength[i]; j++) {
+                tempList.push({
+                  x: episodesCounter,
+                  y: toOneDecimal(temporary[j]),
+                  z: `S${k + 1}E${j + 1}`,
+                });
+                //console.log(`Series: ${i}, season: ${k}, episode: ${j}, episode counter: ${episodesCounter}`)
+                episodesCounter++;
+              }
+              console.log("templist is", tempList);
             }
-        });
+            xyValuesList.push(tempList);
 
-        function compareItemClick(dataObtained) {
-            $.ajax({
-                type: 'POST',
-                url: '/showratings',
-                data: { q: dataObtained.id },
-                success: function(data) {
-                    console.log("item clicked. id show is " + dataObtained.id)
-                    const canvasContainer = document.querySelector(".canvasContainer");
-                    const showData = {
-                        id: dataObtained.id,
-                        title: dataObtained.title, 
-                        rating: data,
-                        poster: dataObtained.poster,
-                        date: dataObtained.date,
-                        plot: dataObtained.plot,
-                        seasons: dataObtained.number_of_seasons
-                    };
+            if (maxEpisodesCounter < episodesCounter) {
+              maxEpisodesCounter = episodesCounter;
+            }
+            console.log("xyvalueslist is ", xyValuesList);
+            console.log("show title array is", showTitles);
+            console.log("current show title is", showTitles[i]);
+          }
 
+          const ctx = document.getElementById("myChart").getContext("2d");
+          const colorPool = [
+            "rgba(231, 0, 0, 0.7)", // Red
+            "rgba(0, 39, 231, 0.7)", // Blue
+            "rgba(231, 217, 0, 0.7)", // Yellow
+            "rgba(43, 231, 0, 0.7)", // Green
+            "rgba(207, 0, 231, 0.7)", // Purple
+            "rgba(245, 40, 145, 0.7)", // Pink
+          ];
 
-                    function showLimitMessage() {
-                        alertOkBox.style.display = 'block';
-                        overlay.style.display = 'block'
-                    }
+          const datasets = xyValuesList.map((dataArray, index) => {
+            return {
+              label: showTitles[index],
+              data: dataArray,
+              borderColor: colorPool[index],
+              backgroundColor: colorPool[index],
+              fill: false,
+              pointRadius: 5,
+              pointHoverRadius: 12,
+              tension: 0.1,
+            };
+          });
 
-                    function hideLimitMessage() {
-                        alertOkBox.style.display = 'none';
-                        overlay.style.display = 'none'
-                    }
-
-                    // Add movie data to listOfSeries
-                    if (listOfSeries.length < maxLenght) {
-                        listOfSeries.push(data);
-                        console.log("list of series is " + data)
-                        // canvasContainer.style.width = (counter+1)*100 + "px";
-                        //counter++;
-                    } else {
-                        showLimitMessage();
-                        return
-                    }
-
-                    alertOk.addEventListener("click", hideLimitMessage);
-
-                    if (window.chartInstance) {
-                        window.chartInstance.destroy();
-                    }
-            
-                    showObjects.push(showData);
-                    showTitles.push(dataObtained.title);
-
-                    console.log("showObjects:", showObjects);
-                    console.log("showTitles:", showTitles);
-                    
-                    showObjects.forEach((element) => console.log(element.title))
-            
-                    console.log("START GRAPH FUNCTION")
-                    console.log(listOfSeries);
-
-                    seasonLength = []
-                    xyValuesList = [];
-                    titleList = [];
-                    highestCounter = 0;
-                    maxEpisodesCounter = 0;
-                    let nOfSeasons;
-
-                    for (let i = 0; i < listOfSeries.length; i++) {
-                        console.log(`Series: ${showTitles[i]}, number os seasons: ${listOfSeries[i].length}`);
-                        episodesCounter = 0;
-                        console.log('listOfSeries is', listOfSeries[i]);
-                        nOfSeasons = listOfSeries[i].length;
-                        
-                        let seasonsArray = listOfSeries[i];
-                        tempList = [];
-
-                        for (k = 0; k < seasonsArray.length; k++) {
-                            temporary = seasonsArray[k];
-                            seasonLength[i] = temporary.length;
-                            objectCounter[i] = 0;
-    
-                            for (let j = 0; j < seasonLength[i]; j++) {
-                                tempList.push({ x: episodesCounter, y: toOneDecimal(temporary[j]), z: `S${k + 1}E${j + 1}` })
-                                //console.log(`Series: ${i}, season: ${k}, episode: ${j}, episode counter: ${episodesCounter}`)
-                                episodesCounter++;
-                            }
-                            console.log('templist is', tempList)
-                        }
-                        xyValuesList.push(tempList);
-
-                        if (maxEpisodesCounter < episodesCounter) {
-                            maxEpisodesCounter = episodesCounter;
-                        }
-                        console.log('xyvalueslist is ', xyValuesList)
-                        console.log('show title array is', showTitles)
-                        console.log('current show title is', showTitles[i])
-                    }
-
-                    
-                    const ctx = document.getElementById('myChart').getContext('2d');
-                    const colorPool = [
-                        'rgba(231, 0, 0, 0.7)',   // Red
-                        'rgba(0, 39, 231, 0.7)',   // Blue
-                        'rgba(231, 217, 0, 0.7)',   // Yellow
-                        'rgba(43, 231, 0, 0.7)',   // Green
-                        'rgba(207, 0, 231, 0.7)',  // Purple
-                        'rgba(245, 40, 145, 0.7)'    // Pink
-                        ];
-
-                    const datasets = xyValuesList.map((dataArray, index) => {
-                        return {
-                            label: showTitles[index],
-                            data: dataArray,
-                            borderColor: colorPool[index],
-                            backgroundColor: colorPool[index],
-                            fill: false,
-                            pointRadius: 5,
-                            pointHoverRadius: 12,
-                            tension: 0.1
-                        };
-                    });
-
-                    window.chartInstance = new Chart(ctx, {
-                    type: "scatter",
-                    data: {
-                        datasets: datasets
+          window.chartInstance = new Chart(ctx, {
+            type: "scatter",
+            data: {
+              datasets: datasets,
+            },
+            options: {
+              // events:['click'],
+              legend: { display: true },
+              scales: {
+                x: {
+                  min: 0,
+                  max: maxEpisodesCounter,
+                  ticks: {
+                    beginAtZero: true,
+                  },
+                },
+                y: {
+                  min: 0,
+                  max: 10,
+                  ticks: {
+                    beginAtZero: true,
+                  },
+                },
+              },
+              title: {
+                display: true,
+                text: "Shows",
+              },
+              plugins: {
+                tooltip: {
+                  enabled: true,
+                  mode: "nearest",
+                  callbacks: {
+                    label: function (myData) {
+                      let dataset = myData.dataset;
+                      let point = dataset.data[myData.dataIndex];
+                      return [
+                        `Episode ${point.x + 1} (${point.z}) `,
+                        `Rating: ${point.y}`,
+                      ];
                     },
-                    options: {
-                        // events:['click'],
-                        legend: {display: true},
-                        scales: {
-                            x: {
-                                min: 0,
-                                max: maxEpisodesCounter,
-                                ticks: {
-                                    beginAtZero: true
-                                }
-                            },
-                            y: {
-                                min: 0,
-                                max: 10,
-                                ticks: {
-                                    beginAtZero: true
-                                }
-                            }
-                        },
-                        title: {
-                            display: true,
-                            text: 'Shows'
-                        },
-                        plugins: {
-                            tooltip: {
-                                enabled: true,
-                                mode: 'nearest',
-                                callbacks: {
-                                    label: function(myData) {
-                                        let dataset = myData.dataset;
-                                        let point = dataset.data[myData.dataIndex];
-                                        return [
-                                            `Episode ${point.x + 1} (${point.z}) `,
-                                            `Rating: ${point.y}`];
-                                        }
-                                    },
-                                },
-                            }
-                        }
-                        
-                    });
+                  },
+                },
+              },
+            },
+          });
 
-                    let chartShowsInfo = document.getElementById('chartShowsInfo');
-                
-                    let showInfoBox = document.createElement('div');
-                    showInfoBox.className = 'show-info-box';
-                    showInfoBox.classList.add('t12')
+          let chartShowsInfo = document.getElementById("chartShowsInfo");
 
-                    const showInfoDiv = document.createElement('div');
-                    showInfoDiv.className = 'tooltip-content';
-                    const showInfoTitle = document.createElement('p');
-                    showInfoTitle.className = 'tooltip-title';
-                    const showInfoData = document.createElement('div');
-                    showInfoData.className = 'tooltip-data';
-                    const showInfoImg = document.createElement('img');
-                    showInfoImg.id = 'tooltip-image';
-                    showInfoImg.classList.add('tooltip-poster');
-                    
-                    showInfoDiv.appendChild(showInfoImg);
-                    showInfoDiv.appendChild(showInfoData);
-                    showInfoBox.appendChild(showInfoTitle);
-                    showInfoBox.appendChild(showInfoDiv);
-                    
-                    chartShowsInfo.appendChild(showInfoBox);
+          let showInfoBox = document.createElement("div");
+          showInfoBox.className = "show-info-box";
+          showInfoBox.classList.add("t12");
 
-                    // Format and set text content with line breaks
-                    showInfoTitle.innerHTML = `
+          const showInfoDiv = document.createElement("div");
+          showInfoDiv.className = "tooltip-content";
+          const showInfoTitle = document.createElement("p");
+          showInfoTitle.className = "tooltip-title";
+          const showInfoData = document.createElement("div");
+          showInfoData.className = "tooltip-data";
+          const showInfoImg = document.createElement("img");
+          showInfoImg.id = "tooltip-image";
+          showInfoImg.classList.add("tooltip-poster");
+
+          showInfoDiv.appendChild(showInfoImg);
+          showInfoDiv.appendChild(showInfoData);
+          showInfoBox.appendChild(showInfoTitle);
+          showInfoBox.appendChild(showInfoDiv);
+
+          chartShowsInfo.appendChild(showInfoBox);
+
+          // Format and set text content with line breaks
+          showInfoTitle.innerHTML = `
                     <div><span style="font-weight: bold; margin-bottom: 5px"> <a href="tvshow/${showData.id}"> ${showData.title} </a><span></div>
-                    `;                      
-                    showInfoData.innerHTML = `
+                    `;
+          showInfoData.innerHTML = `
                     <div><span style="font-weight: bold">Year</span>: ${showData.date}</div>
                     <div><span style="font-weight: bold">Seasons</span>: ${nOfSeasons}</div>
                     <div><span style="font-weight: bold">Episodes</span>: ${maxEpisodesCounter + 1}</div>
                     <div><span style="font-weight: bold">Plot</span>: ${showData.plot}</div>
                     `;
-                    
-                    if (showData.poster) {
-                        showInfoImg.setAttribute("src", "https://image.tmdb.org/t/p/w220_and_h330_face/" + showData.poster);
-                        showInfoImg.style.display = 'block';
-                        showInfoImg.style.marginTop = '5px';
-                        showInfoImg.classList.add("chartImg");
-                    } else {
-                        showInfoImg.style.display = 'none';
-                    }
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        }
+
+          if (showData.poster) {
+            showInfoImg.setAttribute(
+              "src",
+              "https://image.tmdb.org/t/p/w220_and_h330_face/" +
+                showData.poster,
+            );
+            showInfoImg.style.display = "block";
+            showInfoImg.style.marginTop = "5px";
+            showInfoImg.classList.add("chartImg");
+          } else {
+            showInfoImg.style.display = "none";
+          }
+        },
+        error: function (error) {
+          console.log(error);
+        },
+      });
     }
+  }
 
-    document.getElementById("searchShowInput").addEventListener("keyup", function(event) {
-        performShowSearch();
+  document
+    .getElementById("searchShowInput")
+    .addEventListener("keyup", function (event) {
+      performShowSearch();
     });
-    
-
 </script>
-
 
 {% endblock %}
