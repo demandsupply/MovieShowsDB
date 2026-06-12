@@ -40,8 +40,8 @@ async def movie(id):
 
         if user_id:
             status = get_item_status(username, id, "movie")
-            button_favorites = "remove from favorites" if status["is_favorite"] else "add to favorites"
-            button_watchlist = "remove from watchlist" if status["is_in_watchlist"] else "add to watchlist"
+            button_favorites = "- Favorites" if status["is_favorite"] else "+ Favorites"
+            button_watchlist = "- Watchlist" if status["is_in_watchlist"] else "+ Watchlist"
 
             return render_template ("movie.html", imgMovie_datas = imgMovie_datas,  movie_datas=movie_datas, button_favorites=button_favorites, button_watchlist=button_watchlist)
         else:
@@ -55,14 +55,14 @@ async def movie(id):
             favorite_action = request.form.get('favorite')
             watchlist_action = request.form.get('watchlist')
 
-            if favorite_action == "add to favorites":
+            if favorite_action == "+ Favorites":
                 add_favorite(username, id, "movie", movie_datas["title"])
-            elif favorite_action == "remove from favorites":
+            elif favorite_action == "- Favorites":
                 remove_favorite(username, id)
 
-            if watchlist_action == "add to watchlist":
+            if watchlist_action == "+ Watchlist":
                 add_to_watchlist(username, id, "movie", movie_datas["title"])
-            elif watchlist_action == "remove from watchlist":
+            elif watchlist_action == "- Watchlist":
                 remove_from_watchlist(username, id)
 
 

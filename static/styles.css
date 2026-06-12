@@ -1151,8 +1151,13 @@ footer > div > p {
         display: block;
     }
 
-    .carousel-item, .dedicated-poster {
+    .carousel-item, .carousel-img-item .dedicated-poster {
         width: 160px;
+    }
+
+    .dedicated-div .dedicated-poster {
+        width: 100%;
+        max-width: 200px;
     }
 
     .dedicated-div {
