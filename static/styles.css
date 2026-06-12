@@ -25,6 +25,7 @@ body {
     line-height: 1.5;
     letter-spacing: 0.3px;
     height: 100%;
+    width: 100%;
     max-width: 1000px;
     min-width: 320px;
     overflow-x: hidden;
@@ -33,6 +34,11 @@ body {
     flex-direction: column;
     background-color: #fdf1d8;
 }
+
+body.full-width {
+    max-width: none;
+}
+
 
 h1, h2, h3, h4, .subtitle, .compare-p, .top-p, .dedicated-title {
     font-family: 'Playfair Display', serif;
