@@ -37,7 +37,7 @@ async def myarea():
 
         id_favorite_episode = request.form.get("episode_id_favorite")
         if id_favorite_episode:
-            db.execute("DELETE FROM usershows WHERE episode_number = %s AND username = %s", id_favorite_episode, username) 
+            db.execute("DELETE FROM usershows WHERE episode_id = %s AND username = %s", id_favorite_episode, username) 
 
         return redirect (url_for("user.myarea"))
     else:
@@ -138,7 +138,7 @@ async def myarea():
         zip_list_watchlist = zip([i for i in item_list if i["category"] == "watchlist"], watchlist_list) 
         zip_list_episodes = zip(episode_list, favorite_episodes_list)
 
-        button_favorites = "remove from favorites" if item_list else "add to favorites"
+        button_favorites = "- Favorites" if item_list else "+ Favorites"
 
         return render_template("myarea.html", button_favorites=button_favorites, users=username, favorites=item_list, favorites_list=favorites_list, watchlist_list=watchlist_list, zip_list_favorites=zip_list_favorites, zip_list_watchlist=zip_list_watchlist, favorite_episodes_list=favorite_episodes_list, zip_list_episodes=zip_list_episodes, episodes_ratings_list=episodes_ratings_list, environment=environment)
     

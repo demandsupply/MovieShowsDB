@@ -44,8 +44,8 @@ async def tvshow_id(id):
     number_of_seasons = show_datas["number_of_seasons"]
 
     status = get_item_status(username, id, "tv-show")
-    button_favorites = "remove from favorites" if status["is_favorite"] else "add to favorites"
-    button_watchlist = "remove from watchlist" if status["is_in_watchlist"] else "add to watchlist"
+    button_favorites = "- Favorites" if status["is_favorite"] else "+ Favorites"
+    button_watchlist = "- Watchlist" if status["is_in_watchlist"] else "+ Watchlist"
 
 
     # FUNCTION TO GET ALL EPISODES DATA
@@ -54,7 +54,7 @@ async def tvshow_id(id):
         favorite_buttons = []
         season_ratings = []
         counter = 0
-        
+
         # fetch all favorite episode IDs of the user and show in one query
         favorite_episode_ids = set()
         if user_id:
@@ -71,7 +71,7 @@ async def tvshow_id(id):
         for season_data in seasons_results:
             if not season_data:
                 continue
-            
+
             ratings = []
 
             for episode in season_data["episodes"]:
@@ -79,7 +79,7 @@ async def tvshow_id(id):
                 counter += 1
                 ratings.append(episode["vote_average"])
                 is_fav = episode["id"] in favorite_episode_ids
-                favorite_buttons.append("Unfavorite" if is_fav else "Add Favorite")
+                favorite_buttons.append("- Favorites" if is_fav else "+ Favorites")
             season_ratings.append(ratings)
 
         return all_episodes, favorite_buttons, season_ratings, counter
@@ -177,15 +177,15 @@ async def tvshow_id(id):
         if user_id: 
             favorite_action = request.form.get("favorite")
             
-            if favorite_action == "add to favorites":
+            if favorite_action == "+ Favorites":
                 add_favorite(username, id, "tv-show", show_datas["name"])
-            elif favorite_action == "remove from favorites":
+            elif favorite_action == "- Favorites":
                 remove_favorite(username, id)
 
             watchlist_action = request.form.get("watchlist")
-            if watchlist_action == "add to watchlist":
+            if watchlist_action == "+ Watchlist":
                 add_to_watchlist(username, id, "tv-show", show_datas["name"])
-            elif watchlist_action == "remove from watchlist":
+            elif watchlist_action == "- Watchlist":
                 remove_from_watchlist(username, id)
                             
             if request.form.get('favorite_episodes'): 
@@ -249,7 +249,7 @@ async def episode(id, season, seasonEpisode):
 
     is_favorite = is_favorite_episode(username, episode_id)
 
-    button_favorites = "remove from favorite episodes" if is_favorite else "add to favorite episodes"
+    button_favorites = "- Favorites" if is_favorite else "+ Favorites"
 
 
     if request.method == "GET":  
@@ -258,10 +258,10 @@ async def episode(id, season, seasonEpisode):
     else:
         action = request.form.get("favorite")
 
-        if action == "remove from favorite episodes":
+        if action == "- Favorites":
             remove_favorite_episode(username, episode_id)
             
-        elif action == "add to favorite episodes":
+        elif action == "+ Favorites":
             add_favorite_episode(username, show_title, id, episode_data["season_number"], episode_data["episode_number"], episode_data["name"], episode_data["id"])
 
         return redirect(url_for("shows.episode", id=id, season=season, seasonEpisode=seasonEpisode))
