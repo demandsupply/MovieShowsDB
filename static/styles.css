@@ -1081,6 +1081,35 @@ footer > div > p {
 /* Media queries for smartphones */
 @media screen and (max-width: 640px) {
 
+    h1 {
+        font-size: 3rem;
+        text-align: center;
+    }
+
+    .compare-p {
+        font-size: 2.5rem;
+    }
+
+    .subtitle {
+        text-align: center;
+    }
+
+    .dedicated-text-container p,
+    .dedicated-plot,
+    .tooltip-title,
+    .tooltip-data,
+    .p-intro {
+        text-align: center;
+    }
+    .dedicated-form {
+        justify-content: center;
+    }
+
+    .tooltip-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
     .search-text {
         display: none;
     }
