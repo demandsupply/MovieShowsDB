@@ -36,7 +36,7 @@ body {
 }
 
 body.full-width {
-    max-width: none;
+    /* max-width: none; */
 }
 
 
