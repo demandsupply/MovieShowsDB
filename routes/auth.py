@@ -56,7 +56,7 @@ def login():
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
-        return redirect("/")
+        return render_template("login.html")
 
 
 @auth_bp.route("/logout")

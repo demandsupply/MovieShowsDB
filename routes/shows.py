@@ -174,6 +174,10 @@ async def tvshow_id(id):
         )
     
     else:
+        if not user_id:
+            flash("Please log in to perform this action")
+            return redirect(url_for("auth.login"))
+            
         if user_id: 
             favorite_action = request.form.get("favorite")
             

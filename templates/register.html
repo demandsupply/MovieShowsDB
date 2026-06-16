@@ -1,46 +1,41 @@
-{% extends "layout.html" %}
-
-{% block title %}
-    Movie
-{% endblock %}
-
-{% block main %}
-
+{% extends "layout.html" %} {% block title %} Movie {% endblock %} {% block main
+%}
+<h1>Register your account</h1>
+<p>Choose a username and a password; no email address required.</p>
 <form class="register-form" action="/register" method="post">
-    <!-- <p>Choose your username to sign up</p> -->
-     <div class="form-field">
-        <input class="register-input" type="text" name="username" placeholder="username">
-        {% if errors.username %}
-            <span class="error-message">{{ errors.username }}</span>
-        {% endif %}
-        {% if errors.usernamexists %}
-            <span class="error-message">{{ errors.usernamexists }}</span>
-        {% endif %}
-     </div>
-    <!-- <input class="register-input" type="text" name="mail" placeholder="mail"> -->
-    <!-- {% if errors.mail %}
+  <!-- <p>Choose your username to sign up</p> -->
+  <div class="form-field">
+    <label for="username">Username</label>
+    <input class="register-input" type="text" name="username" />
+    {% if errors.username %}
+    <span class="error-message">{{ errors.username }}</span>
+    {% endif %} {% if errors.usernamexists %}
+    <span class="error-message">{{ errors.usernamexists }}</span>
+    {% endif %}
+  </div>
+  <!-- <input class="register-input" type="text" name="mail" placeholder="mail"> -->
+  <!-- {% if errors.mail %}
         <span class="error-message">{{ errors.mail }}</span>
     {% endif %} -->
-    <div class="form-field">
-        <input class="register-input" type="password" name="password" placeholder="password">
-        {% if errors.password %}
-            <span class="error-message">{{ errors.password }}</span>
-        {% endif %}
-        {% if errors.passwordlength %}
-            <span class="error-message">{{ errors.passwordlength }}</span>
-        {% endif %}
-        {% if errors.passwordchars %}
-            <span class="error-message">{{ errors.passwordchars }}</span>
-        {% endif %}
-    </div>
-    <div class="form-field">
-        <input class="register-input" type="password" name="confirm" placeholder="confirm">
-        {% if errors.passwordwrong %}
-            <span class="error-message">{{ errors.passwordwrong }}</span>
-        {% endif %}
-    </div>
-    <input class="btn" type="submit" value="signup">
+  <div class="form-field">
+    <label for="password">Password</label>
+    <input class="register-input" type="password" name="password" />
+    {% if errors.password %}
+    <span class="error-message">{{ errors.password }}</span>
+    {% endif %} {% if errors.passwordlength %}
+    <span class="error-message">{{ errors.passwordlength }}</span>
+    {% endif %} {% if errors.passwordchars %}
+    <span class="error-message">{{ errors.passwordchars }}</span>
+    {% endif %}
+  </div>
+  <div class="form-field">
+    <label for="confirm">Repeat Password</label>
+    <input class="register-input" type="password" name="confirm" />
+    {% if errors.passwordwrong %}
+    <span class="error-message">{{ errors.passwordwrong }}</span>
+    {% endif %}
+  </div>
+  <input class="btn" type="submit" value="Signup" />
 </form>
-
 
 {% endblock %}
