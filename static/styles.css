@@ -864,6 +864,12 @@ td {
     background-color: #e26d5c;
     color: #fff;
 }
+.button-season-class-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+}
 
 
 
