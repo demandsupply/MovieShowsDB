@@ -1,12 +1,17 @@
-{% extends "layout.html" %} {% block title %} Movie {% endblock %} {% block main
-%}
+{% extends "layout.html" %} {% block title %} Register {% endblock %} {% block
+main %}
 <h1>Register your account</h1>
 <p>Choose a username and a password; no email address required.</p>
 <form class="register-form" action="/register" method="post">
   <!-- <p>Choose your username to sign up</p> -->
   <div class="form-field">
     <label for="username">Username</label>
-    <input class="register-input" type="text" name="username" />
+    <input
+      class="register-input"
+      type="text"
+      name="username"
+      value="{{ username }}"
+    />
     {% if errors.username %}
     <span class="error-message">{{ errors.username }}</span>
     {% endif %} {% if errors.usernamexists %}
@@ -37,5 +42,6 @@
   </div>
   <input class="btn" type="submit" value="Signup" />
 </form>
+<p>Already have an account? <a href="/login">Sign up here</a>.</p>
 
 {% endblock %}

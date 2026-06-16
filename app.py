@@ -69,53 +69,43 @@ def register():
     """Register user"""
     if request.method == "POST":
         errors = {}
-        
-        username = request.form.get("username")
-        # Check if input is blank
-        if (not username):
-            errors["username"] = "Username is required"
-            print("REGISTER ERROR: username missing")
+        username = request.form.get("username", "")
+        password = request.form.get("password", "")
+        confirmation = request.form.get("confirm", "")
 
-        # Check if the chosen username is already used
-        temporary = db.execute("SELECT username FROM users WHERE username = %s LIMIT 1", username)
-        for dict in temporary:
-            if dict["username"] == username:
+        # Check if username is blank
+        if not username:
+            errors["username"] = "Username is required"
+        else:
+            # Check if the chosen username is already used
+            temporary = db.execute("SELECT username FROM users WHERE username = %s LIMIT 1", username)
+            if temporary:
                 errors["usernamexists"] = "Username already exists"
                 
-    
-        password = request.form.get("password")
-
-        # Check if input is blank
-        if (not password):
+        # Password validation
+        if not password:
             errors["password"] = "Password is required"
-            
-        
-        # Check if the password has at least: 1 letter, 1 number, lenght = 8
-        if (len(password) < 8):
+        elif len(password) < 8:
             errors["passwordlength"] = "Password must be at least 8 chars"
-            
-        elif (password.isalpha() == True or password.isdigit() == True ):
+        elif password.isalpha() or password.isdigit():
             errors["passwordchars"] = "Password must contain at least one character and one number"
-            
-
-        confirmation = request.form.get("confirm")
 
         # Check if password matches
-        if (password != confirmation):
+        if not confirmation:
+             errors["passwordwrong"] = "Please confirm your password"
+        elif password != confirmation:
             errors["passwordwrong"] = "Password is not the same!"
-        # print(f"values are: {username, password, confirmation}")
 
         if errors:
-            return render_template("register.html", errors=errors)
-
+            return render_template("register.html", errors=errors, username=username)
 
         # Insert the new user into users and store a hash of its password
         hash = generate_password_hash(password)
         db.execute("INSERT INTO users(username, hash) VALUES(%s, %s)", username, hash)
 
-        # flash("Registration successful! You can now login with your new account.")
         return redirect("/?registered=true")
-    return render_template("register.html", errors={})
+    
+    return render_template("register.html", errors={}, username="")
     
     
 
