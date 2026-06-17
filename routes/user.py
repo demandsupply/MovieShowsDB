@@ -1,7 +1,7 @@
 import asyncio
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, current_app, abort
 from helpers.utils import tmdb_get, format_runtime
-from helpers.dbQueries import *
+from helpers.postgreeDbQueries import *
 import requests
 import json
 from helpers.utils import headers
@@ -13,7 +13,6 @@ load_dotenv()
 
 user_bp = Blueprint("user", __name__)
 
-db = SQL(os.getenv("DATABASE_URL"))
 
 environment = os.getenv("FLASK_ENV", "development")
 

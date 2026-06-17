@@ -8,9 +8,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-auth_bp = Blueprint("auth", __name__)
+from helpers.postgreeDbQueries import db
 
-db = SQL(os.getenv("DATABASE_URL"))
+auth_bp = Blueprint("auth", __name__)
 
 
 

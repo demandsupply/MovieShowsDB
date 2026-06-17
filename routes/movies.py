@@ -11,8 +11,6 @@ load_dotenv()
 
 movies_bp = Blueprint("movies", __name__)
 
-db = SQL(os.getenv("DATABASE_URL"))
-
 
 
 @movies_bp.route("/movie/<id>", methods = ["GET", "POST"])

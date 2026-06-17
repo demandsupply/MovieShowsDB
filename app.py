@@ -5,13 +5,13 @@ from cs50 import SQL
 from flask_session import Session
 import requests
 import json
-# import param
 import random
 from werkzeug.security import check_password_hash, generate_password_hash
 from functools import wraps
 import ast
 from helpers.utils import headers, tmdb_get, format_runtime
-from helpers.dbQueries import (
+from helpers.postgreeDbQueries import (
+    db,
     is_favorite, add_favorite, remove_favorite,
     get_username,
     is_in_watchlist, add_to_watchlist, remove_from_watchlist,
@@ -49,11 +49,6 @@ else:
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
-
-
-# Configure sql database
-db = SQL(os.getenv("DATABASE_URL"))
-
 
 
 app.register_blueprint(movies_bp)
@@ -282,4 +277,3 @@ def test():
         print(f"URL EXIT = {response_random_movie}")
 
         return render_template("test.html", movie=random_movie_data)
-

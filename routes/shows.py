@@ -12,8 +12,6 @@ load_dotenv()
 
 shows_bp = Blueprint("shows", __name__)
 
-db = SQL(os.getenv("DATABASE_URL"))
-
 
 
 
