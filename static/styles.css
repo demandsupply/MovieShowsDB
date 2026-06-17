@@ -184,7 +184,7 @@ nav {
 
 .dialog-content {
     padding: 32px;
-    background-color: #f1a782;
+    background-color: #ffe1a8;
 }
 .dialog-content p {
     font-size: 2.5rem;
@@ -194,6 +194,9 @@ nav {
 #loginDialog::backdrop {
     background-color: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(2px);
+}
+.dialog-content .btn {
+    background-color: #f1a782;
 }
 
 /* BUTTONS */
@@ -692,7 +695,7 @@ scrollbar-width: none;  /* Firefox */
 }
 .register-input, .login-input {
     width: 100%;
-    min-width: 230px;
+    min-width: 200px;
     border: 1px solid #f1a782;
     background-color: #fff;
     padding: 8px 12px;
