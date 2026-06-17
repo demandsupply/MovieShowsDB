@@ -904,6 +904,50 @@ td {
     width: 90px;
     border-radius: 6px;
 }
+
+
+/* LOADER */
+.loader-container {
+    display: none;
+    position: fixed;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+
+    background: transparent;
+    padding: 20px;
+    border-radius: 12px;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.loader {
+    width: 48px;
+    height: 48px;
+
+    border: 5px solid #f1a782;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.results li.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .chart-tooltip {
     padding: 15px;
     color: #000;

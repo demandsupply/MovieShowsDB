@@ -2,7 +2,7 @@
 {% block main %}
 
 <script>
-    document.body.classList.add('full-width');
+  document.body.classList.add("full-width");
 </script>
 
 <h1>Show Ratings</h1>
@@ -28,6 +28,11 @@
   </div>
 </div>
 <div id="overlayPage"></div>
+
+<div id="loaderContainer" class="loader-container">
+  <div class="loader"></div>
+  <p>Loading data...</p>
+</div>
 
 <div class="rotate-hint">
   <i class="fa-solid fa-mobile-screen-button"></i>
@@ -117,12 +122,22 @@
     });
 
     function compareItemClick(dataObtained) {
+      // Prevent multiple clicks while loading
+      const allResults = document.querySelectorAll(".results li");
+      allResults.forEach((li) => li.classList.add("disabled"));
+      const loader = document.getElementById("loaderContainer");
+      loader.style.display = "flex";
+
       $.ajax({
         type: "POST",
         url: "/showratings",
         data: { q: dataObtained.id },
         success: function (data) {
           console.log("item clicked. id show is " + dataObtained.id);
+          // Re-enable clicks
+          allResults.forEach((li) => li.classList.remove("disabled"));
+          loader.style.display = "none";
+
           const canvasContainer = document.querySelector(".canvasContainer");
           const showData = {
             id: dataObtained.id,
@@ -335,6 +350,11 @@
         },
         error: function (error) {
           console.log(error);
+          // Re-enable clicks on error
+          const allResults = document.querySelectorAll(".results li");
+          allResults.forEach((li) => li.classList.remove("disabled"));
+          document.getElementById("loaderContainer").style.display = "none";
+          alert("Error fetching show ratings. Please try again.");
         },
       });
     }
