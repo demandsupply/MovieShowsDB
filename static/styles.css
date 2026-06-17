@@ -169,6 +169,17 @@ nav {
 }
 
 
+.li-logout {
+    margin-right: 16px;
+}
+
+.user-display {
+    color: #fff;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+
 /* MODAL */
 .modal {
     position: fixed;
@@ -1303,6 +1314,7 @@ footer > div > p {
         display: flex;
     }
 }
+
 
 /* media queries for navbar if screen size is below 900px */
 @media screen and (max-width: 900px) {
