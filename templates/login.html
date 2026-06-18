@@ -1,7 +1,7 @@
 {% extends "layout.html" %} {% block title %} Log In {% endblock %} {% block
 main %}
 <h1>Login</h1>
-<p>Please sign in to your account.</p>
+<p class="t-center">Please sign in to your account.</p>
 <form class="register-form" action="/login" method="post">
   <div class="form-field">
     <label for="username">Username</label>
@@ -14,6 +14,8 @@ main %}
   <input class="btn" type="submit" value="Login" />
 </form>
 
-<p>Don't have an account? <a href="/register">Register here</a>.</p>
+<p class="t-center">
+  Don't have an account? <a href="/register">Register here</a>.
+</p>
 
 {% endblock %}

@@ -1188,7 +1188,7 @@ footer > div > p {
         font-size: 2.5rem;
     }
 
-    .subtitle {
+    .subtitle, .t-center {
         text-align: center;
     }
 
@@ -1276,6 +1276,9 @@ footer > div > p {
         flex-direction: row;
         margin-top: 0;
         margin-bottom: 24px;
+    }
+    .register-form {
+        margin: 40px auto;
     }
 }
 
