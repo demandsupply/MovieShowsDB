@@ -28,6 +28,7 @@ from routes.compare import compare_bp
 
 from app_config import DevelopmentConfig, ProductionConfig
 from dotenv import load_dotenv
+from helpers.utils import getCurrentYEar
 
 load_dotenv()
 
@@ -119,14 +120,44 @@ async def index():
         movies_task = asyncio.to_thread(tmdb_get, "movie/popular")
         shows_task = asyncio.to_thread(tmdb_get, "tv/popular")
 
+
         # get random movies using "discover/movie?" endpoint -> lighter and more efficient way
         def get_random_movie():
+            starting_release_year = 1950
+            random_year = random.randint(starting_release_year, getCurrentYEar())
+
             params = {
                 "adult": "false",
-                "page": random.randint(1, 200)
+                "primary_release_year": random_year
             }
 
             data = tmdb_get("discover/movie?" + urlencode(params))
+
+            # print(f"current yeart: {getCurrentYEar()}")
+            # print(f"random_year: {random_year}")
+            # print(f"movie data: {data}")
+
+
+            if not data or "results" not in data:
+                return None
+            
+            return random.choice(data["results"])
+        
+        def get_random_show():
+            starting_release_year = 1980
+            random_year = random.randint(starting_release_year, getCurrentYEar())
+
+            params = {
+                "adult": "false",
+                "first_air_date_year": random_year
+            }
+
+            data = tmdb_get("discover/tv?" + urlencode(params))
+            
+            # print(f"current yeart: {getCurrentYEar()}")
+            # print(f"random_year: {random_year}")
+            # print(f"show data: {data}")
+
 
             if not data or "results" not in data:
                 return None
@@ -134,18 +165,18 @@ async def index():
             return random.choice(data["results"])
 
         # original code to get random shows 
-        while True:
-            random_show_id = random.randint(1, 400000)
-            url_random_show = f"https://api.themoviedb.org/3/tv/{random_show_id}"
-            response_random_show = requests.get(url_random_show, headers=headers)
-            if response_random_show:
-                random_show_data = json.loads(response_random_show.text)
-                if random_show_data["adult"] != True:
-                    break
-                else:
-                    print(f"Adult content, load another show")
-            else:
-                print(f"Show does not exist, load another ID")   
+        # while True:
+        #     random_show_id = random.randint(1, 400000)
+        #     url_random_show = f"https://api.themoviedb.org/3/tv/{random_show_id}"
+        #     response_random_show = requests.get(url_random_show, headers=headers)
+        #     if response_random_show:
+        #         random_show_data = json.loads(response_random_show.text)
+        #         if random_show_data["adult"] != True:
+        #             break
+        #         else:
+        #             print(f"Adult content, load another show")
+        #     else:
+        #         print(f"Show does not exist, load another ID")   
 
         results = await asyncio.gather(movies_task, shows_task)
         
@@ -157,7 +188,7 @@ async def index():
 
         # print(f"popular_show_list: {popular_show_list}")   
         
-        return render_template("index.html", popular_movie_list=popular_movie_list, popular_show_list=popular_show_list, random_movie=get_random_movie(), random_show=random_show_data)
+        return render_template("index.html", popular_movie_list=popular_movie_list, popular_show_list=popular_show_list, random_movie=get_random_movie(), random_show=get_random_show())
     else:
         q = request.form.get("q")
         if q:
