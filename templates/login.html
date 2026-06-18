@@ -1,0 +1,19 @@
+{% extends "layout.html" %} {% block title %} Log In {% endblock %} {% block
+main %}
+<h1>Login</h1>
+<p>Please sign in to your account.</p>
+<form class="register-form" action="/login" method="post">
+  <div class="form-field">
+    <label for="username">Username</label>
+    <input class="register-input" type="text" name="username" autofocus />
+  </div>
+  <div class="form-field">
+    <label for="password">Password</label>
+    <input class="register-input" type="password" name="password" />
+  </div>
+  <input class="btn" type="submit" value="Login" />
+</form>
+
+<p>Don't have an account? <a href="/register">Register here</a>.</p>
+
+{% endblock %}

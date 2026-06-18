@@ -1,6 +1,9 @@
+from datetime import date
+
 import requests, json
 import os
 from dotenv import load_dotenv
+
 
 load_dotenv()
 AUTH_CODE = os.getenv("API_KEY")
@@ -23,3 +26,10 @@ def format_runtime(minutes):
     h = minutes // 60
     m = minutes % 60
     return f"{h}h {m:02d}m"
+
+
+def getCurrentYEar():
+    current_date = date.today()
+    current_year = current_date.year
+
+    return current_year

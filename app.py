@@ -5,13 +5,13 @@ from cs50 import SQL
 from flask_session import Session
 import requests
 import json
-# import param
 import random
 from werkzeug.security import check_password_hash, generate_password_hash
 from functools import wraps
 import ast
 from helpers.utils import headers, tmdb_get, format_runtime
-from helpers.dbQueries import (
+from helpers.postgreeDbQueries import (
+    db,
     is_favorite, add_favorite, remove_favorite,
     get_username,
     is_in_watchlist, add_to_watchlist, remove_from_watchlist,
@@ -28,6 +28,7 @@ from routes.compare import compare_bp
 
 from app_config import DevelopmentConfig, ProductionConfig
 from dotenv import load_dotenv
+from helpers.utils import getCurrentYEar
 
 load_dotenv()
 
@@ -51,11 +52,6 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 
-# Configure sql database
-db = SQL(os.getenv("DATABASE_URL"))
-
-
-
 app.register_blueprint(movies_bp)
 app.register_blueprint(shows_bp)
 app.register_blueprint(auth_bp)
@@ -69,53 +65,43 @@ def register():
     """Register user"""
     if request.method == "POST":
         errors = {}
-        
-        username = request.form.get("username")
-        # Check if input is blank
-        if (not username):
-            errors["username"] = "Username is required"
-            print("REGISTER ERROR: username missing")
+        username = request.form.get("username", "")
+        password = request.form.get("password", "")
+        confirmation = request.form.get("confirm", "")
 
-        # Check if the chosen username is already used
-        temporary = db.execute("SELECT username FROM users WHERE username = %s LIMIT 1", username)
-        for dict in temporary:
-            if dict["username"] == username:
+        # Check if username is blank
+        if not username:
+            errors["username"] = "Username is required"
+        else:
+            # Check if the chosen username is already used
+            temporary = db.execute("SELECT username FROM users WHERE username = %s LIMIT 1", username)
+            if temporary:
                 errors["usernamexists"] = "Username already exists"
                 
-    
-        password = request.form.get("password")
-
-        # Check if input is blank
-        if (not password):
+        # Password validation
+        if not password:
             errors["password"] = "Password is required"
-            
-        
-        # Check if the password has at least: 1 letter, 1 number, lenght = 8
-        if (len(password) < 8):
+        elif len(password) < 8:
             errors["passwordlength"] = "Password must be at least 8 chars"
-            
-        elif (password.isalpha() == True or password.isdigit() == True ):
+        elif password.isalpha() or password.isdigit():
             errors["passwordchars"] = "Password must contain at least one character and one number"
-            
-
-        confirmation = request.form.get("confirm")
 
         # Check if password matches
-        if (password != confirmation):
+        if not confirmation:
+             errors["passwordwrong"] = "Please confirm your password"
+        elif password != confirmation:
             errors["passwordwrong"] = "Password is not the same!"
-        # print(f"values are: {username, password, confirmation}")
 
         if errors:
-            return render_template("register.html", errors=errors)
-
+            return render_template("register.html", errors=errors, username=username)
 
         # Insert the new user into users and store a hash of its password
         hash = generate_password_hash(password)
         db.execute("INSERT INTO users(username, hash) VALUES(%s, %s)", username, hash)
 
-        # flash("Registration successful! You can now login with your new account.")
         return redirect("/?registered=true")
-    return render_template("register.html", errors={})
+    
+    return render_template("register.html", errors={}, username="")
     
     
 
@@ -134,14 +120,44 @@ async def index():
         movies_task = asyncio.to_thread(tmdb_get, "movie/popular")
         shows_task = asyncio.to_thread(tmdb_get, "tv/popular")
 
+
         # get random movies using "discover/movie?" endpoint -> lighter and more efficient way
         def get_random_movie():
+            starting_release_year = 1950
+            random_year = random.randint(starting_release_year, getCurrentYEar())
+
             params = {
                 "adult": "false",
-                "page": random.randint(1, 200)
+                "primary_release_year": random_year
             }
 
             data = tmdb_get("discover/movie?" + urlencode(params))
+
+            # print(f"current yeart: {getCurrentYEar()}")
+            # print(f"random_year: {random_year}")
+            # print(f"movie data: {data}")
+
+
+            if not data or "results" not in data:
+                return None
+            
+            return random.choice(data["results"])
+        
+        def get_random_show():
+            starting_release_year = 1980
+            random_year = random.randint(starting_release_year, getCurrentYEar())
+
+            params = {
+                "adult": "false",
+                "first_air_date_year": random_year
+            }
+
+            data = tmdb_get("discover/tv?" + urlencode(params))
+            
+            # print(f"current yeart: {getCurrentYEar()}")
+            # print(f"random_year: {random_year}")
+            # print(f"show data: {data}")
+
 
             if not data or "results" not in data:
                 return None
@@ -149,18 +165,18 @@ async def index():
             return random.choice(data["results"])
 
         # original code to get random shows 
-        while True:
-            random_show_id = random.randint(1, 400000)
-            url_random_show = f"https://api.themoviedb.org/3/tv/{random_show_id}"
-            response_random_show = requests.get(url_random_show, headers=headers)
-            if response_random_show:
-                random_show_data = json.loads(response_random_show.text)
-                if random_show_data["adult"] != True:
-                    break
-                else:
-                    print(f"Adult content, load another show")
-            else:
-                print(f"Show does not exist, load another ID")   
+        # while True:
+        #     random_show_id = random.randint(1, 400000)
+        #     url_random_show = f"https://api.themoviedb.org/3/tv/{random_show_id}"
+        #     response_random_show = requests.get(url_random_show, headers=headers)
+        #     if response_random_show:
+        #         random_show_data = json.loads(response_random_show.text)
+        #         if random_show_data["adult"] != True:
+        #             break
+        #         else:
+        #             print(f"Adult content, load another show")
+        #     else:
+        #         print(f"Show does not exist, load another ID")   
 
         results = await asyncio.gather(movies_task, shows_task)
         
@@ -172,7 +188,7 @@ async def index():
 
         # print(f"popular_show_list: {popular_show_list}")   
         
-        return render_template("index.html", popular_movie_list=popular_movie_list, popular_show_list=popular_show_list, random_movie=get_random_movie(), random_show=random_show_data)
+        return render_template("index.html", popular_movie_list=popular_movie_list, popular_show_list=popular_show_list, random_movie=get_random_movie(), random_show=get_random_show())
     else:
         q = request.form.get("q")
         if q:
@@ -292,4 +308,3 @@ def test():
         print(f"URL EXIT = {response_random_movie}")
 
         return render_template("test.html", movie=random_movie_data)
-

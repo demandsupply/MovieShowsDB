@@ -50,7 +50,7 @@
                             <li class="nav-item"><a class="nav-link" href="/topratedshows">Top 100 Shows</a></li>
                             <!-- <li class="nav-item"><a class="nav-link" href="/test">test page</a></li> -->
                             <li class="nav-item"><a class="nav-link" href="/myarea">My Area</a></li>
-                            <li class="nav-item li-logout float-right"><a class="nav-link" href="/logout">Log Out</a></li>
+                            <li class="nav-item li-logout float-right"><a class="nav-link" href="/logout"><span class="user-display">{{ session["user"] }} | </span>Log Out</a></li>
                             <li class="nav-item toggle-icon"><a href="javascript:void(0)" class="icon" onclick="navToggle()"><i class="fa fa-bars"></i></a></li>
                         </ul>
                     {% else %}
@@ -72,12 +72,13 @@
 
             <dialog id="loginDialog" class="modal">
                 <div class="dialog-content">
+                    <p>Login</p>
                     <!-- Login form -->
                     <form action="/login" method="post" id="loginChild">
                         <div class="login-form">
                             <input class="login-input" type="text" name="username" placeholder="username">
                             <input class="login-input" type="password" name="password" placeholder="password">
-                            <input class="btn" type="submit" value="login">
+                            <input class="btn" type="submit" value="Sign In">
                         </div>
                     </form>
 

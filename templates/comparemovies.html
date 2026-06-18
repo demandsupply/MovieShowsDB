@@ -199,21 +199,27 @@
 
             ticks: {
               font: {
-                size: 18,
+                size: 14,
               },
               // color: 'black',
               callback: function (value, index) {
                 // Get the label text
-                const label = this.getLabelForValue(value);
+                let label = this.getLabelForValue(value);
+
+                // Truncate label if it's too long (e.g., max 20 chars)
+                const maxLength = 20;
+                if (label.length > maxLength) {
+                    label = label.substring(0, maxLength) + "...";
+                }
 
                 // Function to wrap text
                 const wrappedText = [];
                 let line = "";
                 const words = label.split(" ");
-                const maxWidth = 125; // pixels
+                const maxWidth = 100; // pixels
                 const canvas = document.createElement("canvas");
                 const ctx = canvas.getContext("2d");
-                ctx.font = "18px Arial"; // Match the font size
+                ctx.font = "14px Arial"; // Match the font size
 
                 for (let i = 0; i < words.length; i++) {
                   const testLine = line + words[i] + " ";

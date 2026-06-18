@@ -9,8 +9,6 @@ load_dotenv()
 
 compare_bp = Blueprint("compare", __name__)
 
-db = SQL(os.getenv("DATABASE_URL"))
-
 
 @compare_bp.route("/comparemovies", methods=["GET", "POST"])
 def ajaxmovies():

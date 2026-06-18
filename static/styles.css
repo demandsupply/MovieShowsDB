@@ -169,6 +169,17 @@ nav {
 }
 
 
+.li-logout {
+    margin-right: 16px;
+}
+
+.user-display {
+    color: #fff;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+
 /* MODAL */
 .modal {
     position: fixed;
@@ -184,12 +195,19 @@ nav {
 
 .dialog-content {
     padding: 32px;
-    background-color: #f1a782;
+    background-color: #ffe1a8;
+}
+.dialog-content p {
+    font-size: 2.5rem;
+    text-align: center;
 }
 
 #loginDialog::backdrop {
     background-color: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(2px);
+}
+.dialog-content .btn {
+    background-color: #f1a782;
 }
 
 /* BUTTONS */
@@ -670,22 +688,34 @@ scrollbar-width: none;  /* Firefox */
 
 
 /* REGISTER AND LOGIN*/
+
+.center {
+    width: fit-content;
+    margin: auto;
+}
+
 .register-form {
-    max-width: 300px;
-    margin: 100px auto;
+    width: 35%;
+    min-width: 280px;
+    /* margin: 40px auto; */
+    margin: 40px 0;
     display: flex;
     flex-direction: column;
     gap: 16px;
+    padding: 8px;
 }
 .register-input, .login-input {
-    max-width: 250px;
+    width: 100%;
+    min-width: 200px;
     border: 1px solid #f1a782;
     background-color: #fff;
     padding: 8px 12px;
     border-radius: 6px;
 }
 .register-form > .btn, .login-form > .btn {
-    margin: auto;
+    display: block;
+    margin-top: 12px;
+    margin-left: auto;
     width: fit-content;
 }
 /* #loginChild {
@@ -710,7 +740,10 @@ scrollbar-width: none;  /* Firefox */
 .form-field {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: start;
+}
+.form-field label {
+    margin-left: 0;
 }
 
 .error-message {
@@ -845,6 +878,12 @@ td {
     background-color: #e26d5c;
     color: #fff;
 }
+.button-season-class-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+}
 
 
 
@@ -852,6 +891,11 @@ td {
 .canvasContainer{
     margin-top: 64px;
     min-height: 60vh;
+}
+@media screen and (max-width: 640px) and (orientation: landscape) {
+    .canvasContainer{
+        height: 85vh;
+    }
 }
 #moviesChart {
     width: 100%;
@@ -874,6 +918,50 @@ td {
     width: 90px;
     border-radius: 6px;
 }
+
+
+/* LOADER */
+.loader-container {
+    display: none;
+    position: fixed;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+
+    background: transparent;
+    padding: 20px;
+    border-radius: 12px;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.loader {
+    width: 48px;
+    height: 48px;
+
+    border: 5px solid #f1a782;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.results li.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .chart-tooltip {
     padding: 15px;
     color: #000;
@@ -1226,6 +1314,7 @@ footer > div > p {
         display: flex;
     }
 }
+
 
 /* media queries for navbar if screen size is below 900px */
 @media screen and (max-width: 900px) {

@@ -8,9 +8,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-auth_bp = Blueprint("auth", __name__)
+from helpers.postgreeDbQueries import db
 
-db = SQL(os.getenv("DATABASE_URL"))
+auth_bp = Blueprint("auth", __name__)
 
 
 
@@ -56,7 +56,7 @@ def login():
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
-        return redirect("/")
+        return render_template("login.html")
 
 
 @auth_bp.route("/logout")
