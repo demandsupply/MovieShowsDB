@@ -1431,14 +1431,14 @@ footer > div > p {
 
 /* media query for mobile devices in landscape mode (limited heigth) */
 @media screen and (max-height: 500px) and (orientation: landscape) {
-    .dedicated-div .dedicated-poster,
-    .dedicated-poster {
+    .dedicated-div .dedicated-poster .landscape-orentation,
+    .dedicated-poster.landscape-orentation {
         width: auto !important;
         max-height: 360px !important;
     }
     
-    .carousel-item, 
-    .carousel-img-item .dedicated-poster {
+    .carousel-item .landscape-orentation, 
+    .carousel-img-item .dedicated-poster.landscape-orentation {
         width: auto !important;
         max-height: 200px !important;
     }

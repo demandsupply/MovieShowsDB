@@ -10,7 +10,7 @@
     <p class="subtitle">{{ show_datas["name"]}}</p>
     <div class="dedicated-div">
         <div class="dedicated-img-container">
-            <img class="dedicated-poster" src="https://image.tmdb.org/t/p/w500/{{ show_datas["poster_path"] }}" alt="">
+            <img class="dedicated-poster landscape-orentation" src="https://image.tmdb.org/t/p/w500/{{ show_datas["poster_path"] }}" alt="">
         </div>
         <div class="dedicated-text-container">
             <p>Status: <span>{{show_datas["status"]}}</span> </p>
@@ -57,8 +57,8 @@
             <div class="carousel-item-list" id="imgCarouselList">
                 {% for item in imgShow_datas["posters"] %}
                     {% if loop.index0 > 0  and loop.index < 10 %}
-                    <div class="dedicated-img-container carousel-img-item">
-                        <img loading="lazy" class="dedicated-poster" src="https://image.tmdb.org/t/p/w500/{{ item["file_path"] }}" alt="">
+                    <div class="dedicated-img-container carousel-img-item landscape-orentation">
+                        <img loading="lazy" class="dedicated-poster landscape-orentation" src="https://image.tmdb.org/t/p/w500/{{ item["file_path"] }}" alt="">
                     </div>
                     {% endif %}
                 {% endfor %}
