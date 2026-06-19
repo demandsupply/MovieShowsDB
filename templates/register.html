@@ -1,7 +1,9 @@
 {% extends "layout.html" %} {% block title %} Register {% endblock %} {% block
 main %}
-<h1>Register your account</h1>
-<p>Choose a username and a password; no email address required.</p>
+<h1 class="t-center">Register your account</h1>
+<p class="t-center">
+  Choose a username and a password; no email address required.
+</p>
 <form class="register-form" action="/register" method="post">
   <!-- <p>Choose your username to sign up</p> -->
   <div class="form-field">
@@ -40,8 +42,10 @@ main %}
     <span class="error-message">{{ errors.passwordwrong }}</span>
     {% endif %}
   </div>
-  <input class="btn" type="submit" value="Signup" />
+  <input class="btn" type="submit" value="Sign Up" />
 </form>
-<p>Already have an account? <a href="/login">Sign up here</a>.</p>
+<p class="t-center">
+  Already have an account? <a href="/login">Sign up here</a>.
+</p>
 
 {% endblock %}

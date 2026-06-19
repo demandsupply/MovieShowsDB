@@ -44,7 +44,7 @@
         <div class="btn-control prev-btn" id="movieBtnPrev" ><i class="fa-solid fa-angle-left"></i></div>
         <div class="carousel-item-list" id="movieCarouselList">
             {% for movie in popular_movie_list %}
-                <a class="carousel-item" href="movie/{{ movie["id"] }} ">
+                <a class="carousel-item to-add-loader" href="movie/{{ movie["id"] }} ">
                     <img loading="lazy" class="poster-img" src="https://image.tmdb.org/t/p/w440_and_h660_face/{{ movie["poster_path"] }}" alt=""> 
                     <p class="carousel-item-p">{{ movie["title"] }} <br> (<i class="fa-solid fa-star"></i> <span class="vote-round">{{ movie["vote_average"] }}</span>)</p>
                 </a>
@@ -61,7 +61,7 @@
         <div class="btn-control prev-btn" id="showBtnPrev" ><i class="fa-solid fa-angle-left"></i></div>
         <div class="carousel-item-list" id="showCarouselList">
             {% for show in popular_show_list %}
-                    <a class="carousel-item" href="tvshow/{{ show["id"] }} ">
+                    <a class="carousel-item to-add-loader" href="tvshow/{{ show["id"] }} ">
                         <img loading="lazy" class="poster-img" src="https://image.tmdb.org/t/p/w440_and_h660_face/{{ show["poster_path"] }}" alt=""> 
                         <p class="carousel-item-p">{{ show["name"] }} <br> (<i class="fa-solid fa-star"></i> <span class="vote-round">{{ show["vote_average"] }}</span>)</p>
                     </a>
@@ -78,7 +78,7 @@
             <div class="overlay"></div>
             <p class="random-p compare-p">A Random <br> Movie</p>
         </div>
-        <a class="random-box-content rbc1" href="movie/{{ random_movie["id"] }}"">
+        <a class="random-box-content rbc1 to-add-loader" href="movie/{{ random_movie["id"] }}"">
             <img loading="lazy" class="random-poster-img" src="https://image.tmdb.org/t/p/w440_and_h660_face/{{ random_movie["poster_path"] }}" alt=""> 
             <p class="carousel-item-p">{{ random_movie["title"] }} (<i class="fa-solid fa-star"></i> <span class="vote-round">{{ random_movie["vote_average"] }}</span>)</p>
         </a>
@@ -88,7 +88,7 @@
             <div class="overlay"></div>
             <p class="random-p compare-p">A Random <br> Show</p>
         </div>
-        <a class="random-box-content rbc2" href="tvshow/{{ random_show["id"] }}"">
+        <a class="random-box-content rbc2 to-add-loader" href="tvshow/{{ random_show["id"] }}"">
             <img loading="lazy" class="random-poster-img" src="https://image.tmdb.org/t/p/w440_and_h660_face/{{ random_show["poster_path"] }}" alt=""> 
             <p class="carousel-item-p">{{ random_show["name"] }} (<i class="fa-solid fa-star"></i> <span class="vote-round">{{ random_show["vote_average"] }}</span>)</p>
         </a>
@@ -96,16 +96,15 @@
 </div>
 
 <div class="top-container m120auto">
-    <a class="top-box top-box-movies" href="/toprated">
+    <a class="top-box top-box-movies to-add-loader" href="/toprated">
         <div class="overlay"></div>
         <p class="compare-p top-p">Top 200 <br> Movies</p>
     </a>
-    <a class="top-box top-box-shows" href="/topratedshows">
+    <a class="top-box top-box-shows to-add-loader" href="/topratedshows">
         <div class="overlay"></div>
         <p class="compare-p top-p">Top 100 <br> Shows</p>
     </a>
 </div>
-
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="./../static/main.js"></script>

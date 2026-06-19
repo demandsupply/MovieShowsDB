@@ -2,7 +2,7 @@
 {% block main %}
 
 <script>
-    document.body.classList.add('full-width');
+  document.body.classList.add("full-width");
 </script>
 
 <h1 id="compareMovie">Movie Ratings</h1>
@@ -29,11 +29,6 @@
   </div>
 </div>
 <div id="overlayPage"></div>
-
-<div class="rotate-hint">
-  <i class="fa-solid fa-mobile-screen-button"></i>
-  <!-- <p>Ruota lo schermo per visualizzare meglio il grafico</p> -->
-</div>
 
 <div class="canvasContainer">
   <canvas id="moviesChart"></canvas>
@@ -209,7 +204,7 @@
                 // Truncate label if it's too long (e.g., max 20 chars)
                 const maxLength = 20;
                 if (label.length > maxLength) {
-                    label = label.substring(0, maxLength) + "...";
+                  label = label.substring(0, maxLength) + "...";
                 }
 
                 // Function to wrap text

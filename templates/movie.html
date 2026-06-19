@@ -11,7 +11,7 @@
     <p class="subtitle">{{ movie_datas["title"]}}</p>
     <div class="dedicated-div">
         <div class="dedicated-img-container">
-            <img class="dedicated-poster" src="https://image.tmdb.org/t/p/w500/{{ movie_datas["poster_path"] }}" alt="">
+            <img class="dedicated-poster landscape-orentation" src="https://image.tmdb.org/t/p/w500/{{ movie_datas["poster_path"] }}" alt="">
         </div>
         <div class="dedicated-text-container">
             <p>Original title: <span>{{movie_datas["original_title"]}}</span> </p>
@@ -56,8 +56,8 @@
             <div class="carousel-item-list" id="imgCarouselList">
                 {% for item in imgMovie_datas["posters"] %}
                     {% if loop.index0 > 0  and loop.index < 10 %}
-                    <div class="dedicated-img-container carousel-img-item">
-                        <img loading="lazy" class="dedicated-poster" src="https://image.tmdb.org/t/p/w500/{{ item["file_path"] }}" alt="">
+                    <div class="dedicated-img-container carousel-img-item landscape-orentation">
+                        <img loading="lazy" class="dedicated-poster landscape-orentation" src="https://image.tmdb.org/t/p/w500/{{ item["file_path"] }}" alt="">
                     </div>
                     {% endif %}
                 {% endfor %}

@@ -40,27 +40,27 @@
                 <div class="navbar-nav" id="navbar">
                     {% if session["user_id"] %}
                         <ul class="nav-responsive" id="myResponsiveNav">
-                            <li class="nav-item"><a class="home nav-active nav-link" href="/">Home</a></li>
+                            <li class="nav-item to-add-loader"><a class="home nav-active nav-link" href="/">Home</a></li>
                             <!-- <li class="nav-item"><a class="nav-link" href="/layout">L A Y O U T</a></li> -->
                             <!-- <li class="nav-item"><a class="nav-link" href="/register">Register</a></li> -->
-                            <li class="nav-item"><a class="nav-link" href="/comparemovies">Compare Movies</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/comparetvshows">Compare Shows</a></li>
+                            <li class="nav-item to-add-loader"><a class="nav-link" href="/comparemovies">Compare Movies</a></li>
+                            <li class="nav-item to-add-loader"><a class="nav-link" href="/comparetvshows">Compare Shows</a></li>
                             <!-- <li class="nav-item"><a class="nav-link" href="/search">Old Search</a></li> -->
-                            <li class="nav-item"><a class="nav-link" href="/toprated">Top 200 Movies</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/topratedshows">Top 100 Shows</a></li>
+                            <li class="nav-item to-add-loader"><a class="nav-link" href="/toprated">Top 200 Movies</a></li>
+                            <li class="nav-item to-add-loader"><a class="nav-link" href="/topratedshows">Top 100 Shows</a></li>
                             <!-- <li class="nav-item"><a class="nav-link" href="/test">test page</a></li> -->
-                            <li class="nav-item"><a class="nav-link" href="/myarea">My Area</a></li>
+                            <li class="nav-item to-add-loader"><a class="nav-link" href="/myarea">My Area</a></li>
                             <li class="nav-item li-logout float-right"><a class="nav-link" href="/logout"><span class="user-display">{{ session["user"] }} | </span>Log Out</a></li>
                             <li class="nav-item toggle-icon"><a href="javascript:void(0)" class="icon" onclick="navToggle()"><i class="fa fa-bars"></i></a></li>
                         </ul>
                     {% else %}
                         <ul class="nav-responsive" id="myResponsiveNav">
-                            <li class="nav-item"><a class="home nav-active nav-link" href="/">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/comparemovies">Compare Movies</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/comparetvshows">Compare Shows</a></li>
+                            <li class="nav-item to-add-loader"><a class="home nav-active nav-link" href="/">Home</a></li>
+                            <li class="nav-item to-add-loader"><a class="nav-link" href="/comparemovies">Compare Movies</a></li>
+                            <li class="nav-item to-add-loader"><a class="nav-link" href="/comparetvshows">Compare Shows</a></li>
                             <!-- <li class="nav-item"><a class="nav-link" href="/search">Old Search</a></li> -->
-                            <li class="nav-item"><a class="nav-link" href="/toprated">Top 200 Movies</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/topratedshows">Top 100 Shows</a></li>
+                            <li class="nav-item to-add-loader"><a class="nav-link" href="/toprated">Top 200 Movies</a></li>
+                            <li class="nav-item to-add-loader"><a class="nav-link" href="/topratedshows">Top 100 Shows</a></li>
                             <!-- <li class="nav-item"><a class="nav-link" href="/test">test page</a></li> -->
                             <li class="nav-item li-login float-right"><a class="nav-link" onclick="showDialog()" id="loginParent">Log In</a></li>
                             <li class="nav-item li-register float-right"><a class="nav-link" href="/register">Register</a></li>
@@ -90,6 +90,11 @@
             <main class="container py-5 text-center">
                 {% block main %}{% endblock %}
             </main>
+
+            <div id="loaderContainer" class="loader-container colored">
+                <div class="loader"></div>
+                <!-- <p>Loading data...</p> -->
+            </div>
         </div>
         
         <div class="footer-container">
@@ -106,6 +111,24 @@
         
     </body>
     <script>
+        const nav = Array.from(document.querySelectorAll(".to-add-loader"))
+        const loader = document.getElementById("loaderContainer");
 
+        console.log("nav is")
+        console.log(nav)
+
+        // add click listener to each link to check the windows size when user click link
+        nav.forEach(link => {
+            link.addEventListener("click", () => {
+                if (window.innerWidth < 640) {
+                    loader.style.display = "flex";
+                }
+            });
+        });
+
+        // hide loader when page is shown
+        window.addEventListener("pageshow", function(event) {
+            loader.style.display = "none";
+        });
     </script>
 </html>
