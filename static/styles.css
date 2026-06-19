@@ -212,7 +212,7 @@ nav {
 
 /* BUTTONS */
 .btn {
-    padding: 4px 16px;
+    padding: 6px 16px;
     background-color: #e4d6a6;
     border: none;
     border-radius: 6px;
@@ -1399,3 +1399,31 @@ footer > div > p {
     }
 
 }
+
+/* media query for mobile devices in landscape mode (limited heigth) */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .dedicated-div .dedicated-poster,
+    .dedicated-poster {
+        width: auto !important;
+        max-height: 360px !important;
+    }
+    
+    .carousel-item, 
+    .carousel-img-item .dedicated-poster {
+        width: auto !important;
+        max-height: 200px !important;
+    }
+
+    .dedicated-text-container p, .dedicated-text-container span {
+        font-size: 1.4rem;
+    }
+
+    .dedicated-form {
+        margin-top: 24px;
+    }
+
+    .dedicated-form .btn {
+        font-size: 1.5rem;
+    }
+}
+
