@@ -935,14 +935,16 @@ td {
     border-radius: 12px;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 12px;}
+.loader-container.colored {
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .loader {
     width: 48px;
     height: 48px;
 
-    border: 5px solid #f1a782;
+    border: 5px solid #e28150;
     border-bottom-color: transparent;
     border-radius: 50%;
     display: inline-block;
@@ -1292,15 +1294,15 @@ footer > div > p {
     justify-content: center;
     background-color: #d4cbc9;
     color: #fff;
-    padding: 16px;
+    padding: 8px;
     border-radius: 9999px;
     margin: 20px auto;
-    width: 64px;
+    width: 36px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 .rotate-hint i {
-    font-size: 3rem;
+    font-size: 2rem;
     animation: rotate 2s infinite linear;
 }
 
