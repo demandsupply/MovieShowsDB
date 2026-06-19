@@ -889,7 +889,7 @@ td {
 
 /* COMPARE SHOWS AND MOVIES */
 .canvasContainer{
-    margin-top: 64px;
+    margin-top: 32px;
     min-height: 60vh;
 }
 @media screen and (max-width: 640px) and (orientation: landscape) {
