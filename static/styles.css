@@ -1314,11 +1314,40 @@ footer > div > p {
     100% { transform: rotate(0deg); }
 }
 
+
 @media screen and (max-width: 640px) and (orientation: portrait) {
     .rotate-hint {
         display: flex;
     }
 }
+
+.r-h-relative {
+    position: relative;
+}
+
+.r-h-relative .rotate-hint {
+    display: none !important;
+}
+
+@media screen and (max-width: 640px) and (orientation: portrait) {
+    .r-h-relative {
+        padding-bottom: 60px; 
+    }
+
+    .r-h-relative .rotate-hint.r-h-absolute {
+        position: absolute !important;
+        bottom: 10px !important;
+        right: -10px !important;
+        transform: translateX(-50%) !important;
+        margin: 0 !important;
+        display: none !important; 
+    }
+
+    .r-h-relative .rotate-hint.r-h-absolute.visible {
+        display: flex !important;
+    }
+}
+
 
 
 /* media queries for navbar if screen size is below 900px */

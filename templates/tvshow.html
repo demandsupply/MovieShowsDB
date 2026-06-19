@@ -68,11 +68,17 @@
     </div>
 </div>
 
-<div>
+<div class="r-h-relative">
     <p class="subtitle">Episode ratings<p>
 
     <canvas id="myChart" class="canvas-show"></canvas>
+
+    <div class="rotate-hint r-h-absolute">
+      <i class="fa-solid fa-mobile-screen-button"></i>
+      <!-- <p>Rotate your screen for bette experience</p> -->
+    </div>
 </div>
+
 
 <h1>Episodes</h1>
 {% set iterate = namespace(num = 0) %}
@@ -266,8 +272,27 @@
             position: 'top'
         }
         }
+    }});
+
+    // use observer to show rotate-hint after specified point
+    const triggerPoint = document.getElementById("myChart");
+    const rotateHint = document.querySelector(".r-h-relative .rotate-hint");
+
+    if (triggerPoint && rotateHint) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    rotateHint.classList.add("visible");
+                } else {
+                    rotateHint.classList.remove("visible");
+                }
+            });
+        }, {
+            threshold: 0.1 // 10% of chart in the viewport
+        });
+
+        observer.observe(triggerPoint);
     }
-    });
     
     </script>
     
